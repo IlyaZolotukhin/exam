@@ -1,10 +1,8 @@
-import React from "react";
-
-export const Home = () => {
+export const Post = () => {
 
     return (
         <div style={{ padding: 20 }}>
-            Home
+            Post
         </div>
     );
 }
