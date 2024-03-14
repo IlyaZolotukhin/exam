@@ -8,12 +8,14 @@ import {About} from "./About";
 import {Post} from "./Post";
 import {PostLists} from "./PostLists";
 import {Posts} from "./Posts";
+import {googleLogout} from "@react-oauth/google";
 
 export const AppLayout = () => {
     const [user, setUser] = useState<User | null>(null);
     const navigate = useNavigate();
     const logOut = () => {
         setUser(null);
+        googleLogout();
         navigate("/");
     }
 
@@ -40,6 +42,7 @@ export const AppLayout = () => {
           Logout
         </span>}
             </nav>
+            <hr/>
             <Routes>
                 <Route path="/" element={<Home />}/>
                 <Route path="/posts" element={<Posts />}>

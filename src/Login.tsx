@@ -53,10 +53,11 @@ export const Login = ({ onLogin }: { onLogin: (user: User) => void }) => {
                 onChange={(e) => setData({ ...data, password: e.target.value })} /><br /><br />
             <button onClick={handleLogin}>Login</button>
            <GoogleLogin
+               ux_mode={"popup"}
                 onSuccess={credentialResponse => {
                     if (credentialResponse && credentialResponse.credential) {
                         const decoded = jwtDecode<DataJWT>(credentialResponse.credential);
-                        console.log(decoded.name);
+                        /*console.log(decoded.name);*/
                         onLogin && onLogin({ username: decoded.name });
                         navigate('/profile' ) ;
                     }
