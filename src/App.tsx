@@ -4,7 +4,7 @@ import {AppLayout} from "./AppLayout";
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter basename={'exam'}>
+        <BrowserRouter>
                 <AppLayout/>
         </BrowserRouter>
     );
