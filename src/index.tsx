@@ -9,12 +9,12 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <React.StrictMode>
-        <GoogleOAuthProvider
-            clientId="147007633482-vjdkk1l81ogcilrk9dfeojebt87ge4bv.apps.googleusercontent.com">
+    <GoogleOAuthProvider
+        clientId="147007633482-vjdkk1l81ogcilrk9dfeojebt87ge4bv.apps.googleusercontent.com">
+        <React.StrictMode>
             <App/>
-        </GoogleOAuthProvider>
-    </React.StrictMode>
+        </React.StrictMode>
+    </GoogleOAuthProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

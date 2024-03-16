@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import axios from "axios";
 
 interface Todo {
     userId: number;
@@ -10,9 +11,9 @@ export const Home = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
 
     useEffect(() => {
-        fetch('https://jsonplaceholder.typicode.com/todos/')
-            .then(response => response.json())
-            .then(json => setTodos(json));
+        axios.get('https://jsonplaceholder.typicode.com/todos/')
+            .then(response => setTodos(response.data))
+            .catch(error => console.error(error));
     }, []);
 
     return (

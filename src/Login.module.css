@@ -1,0 +1,11 @@
+.googleBtn {
+    padding: 10px;
+}
+
+
+@media screen and (width <= 1024px) {
+    .googleBtn {
+        display: none;
+    }
+}
+
