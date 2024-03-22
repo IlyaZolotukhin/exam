@@ -61,7 +61,6 @@ export const Login = ({onLogin}: { onLogin: (user: User) => void }) => {
                     size="large"
                     text="continue_with"
                     onSuccess={credentialResponse => {
-                        console.log(credentialResponse)
                         if (credentialResponse && credentialResponse.credential) {
                             const decoded = jwtDecode<DataJWT>(credentialResponse.credential);
                             //console.log(decoded.name);
