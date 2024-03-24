@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {URLSearchParamsInit, useSearchParams} from "react-router-dom";
 import axios from "axios";
 
@@ -16,8 +16,8 @@ export const Home = () => {
     const [perPage, setPerPage] = useState<number>(5);
     const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(false)
-    const [sortByIdAsc, setSortByIdAsc] = useState<boolean>(true);
-    const [sortByTitleAsc, setSortByTitleAsc] = useState<boolean>(true);
+    const [sortByIdAsc, setSortByIdAsc] = useState<boolean>(false);
+    const [sortByTitleAsc, setSortByTitleAsc] = useState<boolean>(false);
     const handleSearch = (page: string, perPage: string) => {
         const params: URLSearchParamsInit = { page, perPage };
         setSearchParams(params);
@@ -47,6 +47,12 @@ if(newPage !== page || newPerPage !== perPage){
     setPerPage(newPerPage);
 }
     }, [searchParams, page, perPage]);
+
+    const handleChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setPerPage(parseInt(e.target.value))
+        setSortByIdAsc(false)
+        setSortByTitleAsc(false)
+    };
 
     const handleSortById = () => {
         setSortByIdAsc(prev => !prev);
@@ -91,7 +97,7 @@ if(newPage !== page || newPerPage !== perPage){
             <div>
                 <button onClick={() => setPage(prevPage => prevPage - 1)}>Previous Page</button>
                 <button onClick={() => setPage(prevPage => prevPage + 1)}>Next Page</button>
-                <select value={perPage} onChange={(e) => setPerPage(parseInt(e.target.value))}>
+                <select value={perPage} onChange={handleChangePerPage}>
                     <option value="3">3 per page</option>
                     <option value="5">5 per page</option>
                     <option value="10">10 per page</option>
