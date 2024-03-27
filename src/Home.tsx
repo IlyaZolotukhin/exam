@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {URLSearchParamsInit, useSearchParams} from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
 
 type Photo = {
     albumId: number
@@ -19,18 +20,18 @@ export const Home = () => {
     const [sortByIdAsc, setSortByIdAsc] = useState<boolean>(false);
     const [sortByTitleAsc, setSortByTitleAsc] = useState<boolean>(false);
     const handleSearch = (page: string, perPage: string) => {
-        const params: URLSearchParamsInit = { page, perPage };
+        const params: URLSearchParamsInit = {page, perPage};
         setSearchParams(params);
     };
 
     useEffect(() => {
         setLoading(true)
         axios.get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=${perPage}`)
-    .then(response => {
-            setPhotos(response.data);
-        handleSearch(page.toString(), perPage.toString());
-        setLoading(false);
-        })
+            .then(response => {
+                setPhotos(response.data);
+                handleSearch(page.toString(), perPage.toString());
+                setLoading(false);
+            })
             .catch(error => {
                 console.error(error);
                 setLoading(false);
@@ -39,13 +40,13 @@ export const Home = () => {
     }, [page, perPage]);
 
     useEffect(() => {
-        const params = new URLSearchParams(searchParams);
-        const newPage = parseInt(params.get('page') || '1');
-        const newPerPage = parseInt(params.get('perPage') || '10');
-if(newPage !== page || newPerPage !== perPage){
-    setPage(newPage);
-    setPerPage(newPerPage);
-}
+        const param = new URLSearchParams(searchParams);
+        const newPage = parseInt(param.get('page') || '1');
+        const newPerPage = parseInt(param.get('perPage') || '5');
+        if (newPage !== page || newPerPage !== perPage) {
+            setPage(newPage);
+            setPerPage(newPerPage);
+        }
     }, [searchParams, page, perPage]);
 
     const handleChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,14 +72,14 @@ if(newPage !== page || newPerPage !== perPage){
     };
 
     return (
-        <div style={{ padding: 20 }}>
+        <Container>
             {loading ? <div>Loading...</div>
-                :(
+                : (
                     <table>
                         <thead>
                         <tr>
-                            <th onClick={handleSortById}>Photo Number{sortByIdAsc? ' ▲' : ' ▼'}</th>
-                            <th onClick={handleSortByTitle}>Photo Title{sortByTitleAsc? ' ▲' : ' ▼'}</th>
+                            <TD onClick={handleSortById}>Photo Number{sortByIdAsc ? ' ▲' : ' ▼'}</TD>
+                            <TD onClick={handleSortByTitle}>Photo Title{sortByTitleAsc ? ' ▲' : ' ▼'}</TD>
                             <th>Photo</th>
                         </tr>
                         </thead>
@@ -87,14 +88,14 @@ if(newPage !== page || newPerPage !== perPage){
                             <tr key={photo.id}>
                                 <td>{photo.id}</td>
                                 <td>{photo.title}</td>
-                                <td><img alt={photo.title} src={photo.url} style={{ width: 100 }} /></td>
+                                <td><Img alt={photo.title} src={photo.url}/></td>
                             </tr>
                         ))}
                         </tbody>
                     </table>
                 )}
 
-            <div>
+            <Pagination>
                 <button onClick={() => setPage(prevPage => prevPage - 1)}>Previous Page</button>
                 <button onClick={() => setPage(prevPage => prevPage + 1)}>Next Page</button>
                 <select value={perPage} onChange={handleChangePerPage}>
@@ -103,7 +104,24 @@ if(newPage !== page || newPerPage !== perPage){
                     <option value="10">10 per page</option>
                 </select>
 
-            </div>
-        </div>
+            </Pagination>
+        </Container>
     );
 }
+
+const Container = styled.div`
+    width: 50%;
+    margin: auto;
+    padding: 20px;`
+;
+const TD = styled.th`
+cursor: pointer`
+;
+const Img = styled.img`
+width: 100px`
+;
+const Pagination = styled.div`
+    width: 50%;
+    margin: auto;
+    padding: 40px;`
+;
