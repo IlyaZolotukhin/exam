@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {URLSearchParamsInit, useSearchParams} from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+import {log} from "node:util";
 
 type Photo = {
     albumId: number
@@ -29,7 +30,7 @@ export const Home = () => {
         axios.get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=${perPage}`)
             .then(response => {
                 setPhotos(response.data);
-                handleSearch(page.toString(), perPage.toString());
+               //handleSearch(page.toString(), perPage.toString());
                 setLoading(false);
             })
             .catch(error => {
@@ -47,10 +48,21 @@ export const Home = () => {
             setPage(newPage);
             setPerPage(newPerPage);
         }
-    }, [searchParams, page, perPage]);
+    }, [page, perPage, searchParams]);
+
+    const handlePrevPage = () => {
+        setPage(prevPage => prevPage - 1)
+        handleSearch((page-1).toString(), perPage.toString());
+    };
+
+    const handleNextPage = () => {
+        setPage(prevPage => prevPage + 1)
+        handleSearch((page+1).toString(), perPage.toString());
+    };
 
     const handleChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setPerPage(parseInt(e.target.value))
+        handleSearch(page.toString(), (e.target.value).toString());
         setSortByIdAsc(false)
         setSortByTitleAsc(false)
     };
@@ -96,8 +108,9 @@ export const Home = () => {
                 )}
 
             <Pagination>
-                <button onClick={() => setPage(prevPage => prevPage - 1)}>Previous Page</button>
-                <button onClick={() => setPage(prevPage => prevPage + 1)}>Next Page</button>
+                <Button disabled={page === 1} onClick={handlePrevPage}>Previous Page</Button>
+                {page}
+                <Button onClick={handleNextPage}>Next Page</Button>
                 <select value={perPage} onChange={handleChangePerPage}>
                     <option value="3">3 per page</option>
                     <option value="5">5 per page</option>
@@ -124,4 +137,7 @@ const Pagination = styled.div`
     width: 50%;
     margin: auto;
     padding: 40px;`
+;
+const Button = styled.button`
+    margin: 20px;`
 ;
