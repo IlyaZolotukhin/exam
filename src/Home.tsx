@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {URLSearchParamsInit, useSearchParams} from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import {log} from "node:util";
 
 type Photo = {
     albumId: number
@@ -20,14 +19,18 @@ export const Home = () => {
     const [loading, setLoading] = useState(false)
     const [sortByIdAsc, setSortByIdAsc] = useState<boolean>(false);
     const [sortByTitleAsc, setSortByTitleAsc] = useState<boolean>(false);
-    const handleSearch = (page: string, perPage: string) => {
-        const params: URLSearchParamsInit = {page, perPage};
+    const [searchText, setSearchText] = useState<string>('');
+    const handleSearch = (page: string, perPage: string, searchText: string) => {
+        const params: URLSearchParamsInit = {page, perPage, searchText};
         setSearchParams(params);
     };
 
     useEffect(() => {
+        const param = new URLSearchParams(searchParams);
+        const newPage = parseInt(param.get('page') || '1');
+        const newPerPage = parseInt(param.get('perPage') || '5');
         setLoading(true)
-        axios.get(`https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=${perPage}`)
+        axios.get(`https://jsonplaceholder.typicode.com/photos?_page=${newPage}&_limit=${newPerPage}&q=${searchText}`)
             .then(response => {
                 setPhotos(response.data);
                //handleSearch(page.toString(), perPage.toString());
@@ -38,7 +41,7 @@ export const Home = () => {
                 setLoading(false);
             });
 
-    }, [page, perPage]);
+    }, [page, perPage, searchText]);
 
     useEffect(() => {
         const param = new URLSearchParams(searchParams);
@@ -50,19 +53,23 @@ export const Home = () => {
         }
     }, [page, perPage, searchParams]);
 
+    const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchText(e.target.value);
+    };
+
     const handlePrevPage = () => {
         setPage(prevPage => prevPage - 1)
-        handleSearch((page-1).toString(), perPage.toString());
+        handleSearch((page-1).toString(), perPage.toString(), searchText);
     };
 
     const handleNextPage = () => {
         setPage(prevPage => prevPage + 1)
-        handleSearch((page+1).toString(), perPage.toString());
+        handleSearch((page+1).toString(), perPage.toString(), searchText);
     };
 
     const handleChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setPerPage(parseInt(e.target.value))
-        handleSearch(page.toString(), (e.target.value).toString());
+        handleSearch(page.toString(), (e.target.value).toString(), searchText);
         setSortByIdAsc(false)
         setSortByTitleAsc(false)
     };
@@ -85,6 +92,8 @@ export const Home = () => {
 
     return (
         <Container>
+            <H1>Home</H1>
+            <Input type="text" value={searchText} onChange={handleSearchTextChange} placeholder="Search by title"/>
             {loading ? <div>Loading...</div>
                 : (
                     <table>
@@ -126,6 +135,16 @@ const Container = styled.div`
     width: 50%;
     margin: auto;
     padding: 20px;`
+;
+const H1 = styled.h1`
+    margin: 0;`
+;
+const Input = styled.input`
+    width: 50%;
+    margin: 20px auto;
+    padding: 5px;
+    border: 2px solid gray;
+    border-radius: 5px;`
 ;
 const TD = styled.th`
 cursor: pointer`
