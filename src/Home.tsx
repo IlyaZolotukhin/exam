@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {URLSearchParamsInit, useSearchParams} from "react-router-dom";
+import {Link, URLSearchParamsInit, useSearchParams} from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+
 
 type Photo = {
     albumId: number
@@ -20,6 +21,7 @@ export const Home = () => {
     const [sortByIdAsc, setSortByIdAsc] = useState<boolean>(false);
     const [sortByTitleAsc, setSortByTitleAsc] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
+
     const handleSearch = (page: string, perPage: string, searchText: string) => {
         const params: URLSearchParamsInit = {page, perPage, searchText};
         setSearchParams(params);
@@ -29,11 +31,12 @@ export const Home = () => {
         const param = new URLSearchParams(searchParams);
         const newPage = parseInt(param.get('page') || '1');
         const newPerPage = parseInt(param.get('perPage') || '5');
+        const newSearchText = param.get('searchText') || '';
         setLoading(true)
-        axios.get(`https://jsonplaceholder.typicode.com/photos?_page=${newPage}&_limit=${newPerPage}&q=${searchText}`)
+        axios.get(`https://jsonplaceholder.typicode.com/photos?_page=${newPage}&_limit=${newPerPage}&q=${newSearchText}`)
             .then(response => {
                 setPhotos(response.data);
-               //handleSearch(page.toString(), perPage.toString());
+                //handleSearch(page.toString(), perPage.toString());
                 setLoading(false);
             })
             .catch(error => {
@@ -47,24 +50,27 @@ export const Home = () => {
         const param = new URLSearchParams(searchParams);
         const newPage = parseInt(param.get('page') || '1');
         const newPerPage = parseInt(param.get('perPage') || '5');
+        const newSearchText = param.get('searchText') || '';
         if (newPage !== page || newPerPage !== perPage) {
             setPage(newPage);
             setPerPage(newPerPage);
+            setSearchText(newSearchText)
         }
-    }, [page, perPage, searchParams]);
+    }, [page, perPage, searchParams, searchText]);
 
     const handleSearchTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value);
+        handleSearch((page).toString(), perPage.toString(), e.target.value);
     };
 
     const handlePrevPage = () => {
         setPage(prevPage => prevPage - 1)
-        handleSearch((page-1).toString(), perPage.toString(), searchText);
+        handleSearch((page - 1).toString(), perPage.toString(), searchText);
     };
 
     const handleNextPage = () => {
         setPage(prevPage => prevPage + 1)
-        handleSearch((page+1).toString(), perPage.toString(), searchText);
+        handleSearch((page + 1).toString(), perPage.toString(), searchText);
     };
 
     const handleChangePerPage = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -108,7 +114,11 @@ export const Home = () => {
                         {photos.map(photo => (
                             <tr key={photo.id}>
                                 <td>{photo.id}</td>
-                                <td>{photo.title}</td>
+                                <td>
+                                    <StyledLink to={`/photo/${photo.id}?title=${photo.title}&url=${photo.url}`}>
+                                        {photo.title}
+                                    </StyledLink>
+                                </td>
                                 <td><Img alt={photo.title} src={photo.url}/></td>
                             </tr>
                         ))}
@@ -147,10 +157,15 @@ const Input = styled.input`
     border-radius: 5px;`
 ;
 const TD = styled.th`
-cursor: pointer`
+    cursor: pointer;`
+;
+const StyledLink = styled(Link)`
+    padding-right: 10px;
+    text-decoration: none;
+    color: inherit;`
 ;
 const Img = styled.img`
-width: 100px`
+    width: 100px`
 ;
 const Pagination = styled.div`
     width: 50%;

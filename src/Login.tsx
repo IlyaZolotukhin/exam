@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {GoogleLogin} from "@react-oauth/google";
 import {jwtDecode} from "jwt-decode";
-import s from "./Login.module.css"
+import styled from "styled-components";
 
 export type User = {
     username: string;
@@ -42,18 +42,18 @@ export const Login = ({onLogin}: { onLogin: (user: User) => void }) => {
     }
 
     return (
-        <div style={{padding: 10}}>
+        <Container>
             <br/>
-            <span>Username:</span><br/>
+            <span>Username:</span>
             <input
                 type="text"
-                onChange={(e) => setData({...data, username: e.target.value})}/><br/>
-            <span>Password:</span><br/>
+                onChange={(e) => setData({...data, username: e.target.value})}/>
+            <span>Password:</span>
             <input
                 type="password"
-                onChange={(e) => setData({...data, password: e.target.value})}/><br/><br/>
+                onChange={(e) => setData({...data, password: e.target.value})}/>
             <button onClick={handleLogin}>Login</button>
-            <div className={s.googleBtn}>
+            <GoogleBtn>
                 <GoogleLogin
                     ux_mode={'popup'}
                     useOneTap={true}
@@ -72,7 +72,27 @@ export const Login = ({onLogin}: { onLogin: (user: User) => void }) => {
                         console.log('Login Failed');
                     }}
                 />
-            </div>
-        </div>
+            </GoogleBtn>
+        </Container>
     );
 }
+
+const Container = styled.div`
+    width: 20%;
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    @media screen and (width <= 1024px){
+        width: 80%;
+    }`
+;
+const GoogleBtn = styled.div`
+    padding: 10px;
+    height: 46px;
+`
+;

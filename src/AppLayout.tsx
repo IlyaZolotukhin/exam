@@ -9,6 +9,8 @@ import {Post} from "./Post";
 import {PostLists} from "./PostLists";
 import {Posts} from "./Posts";
 import {googleLogout} from "@react-oauth/google";
+import {Card} from "./Card";
+import styled from "styled-components";
 
 export const AppLayout = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -21,30 +23,31 @@ export const AppLayout = () => {
 
     return (
         <>
-            <nav style={{ margin: 10 }}>
-                <Link to="/" style={{ padding: 5 }}>
+            <Nav>
+                <Link to="/" style={{padding: 5}}>
                     Home
                 </Link>
-                <Link to="/posts" style={{ padding: 5 }}>
+                <Link to="/posts" style={{padding: 5}}>
                     Posts
                 </Link>
-                <Link to="/about" style={{ padding: 5 }}>
+                <Link to="/about" style={{padding: 5}}>
                     About
                 </Link>
                 <span> | </span>
-                {user && <Link to="/profile" style={{ padding: 5 }}>
+                {user && <Link to="/profile" style={{padding: 5}}>
                     Profile
                 </Link>}
-                {!user && <Link to="/login" style={{ padding: 5 }}>
+                {!user && <Link to="/login" style={{padding: 5}}>
                     Login
                 </Link>}
-                {user && <span onClick={logOut} style={{ padding: 5, cursor: 'pointer' }}>
+                {user && <span onClick={logOut} style={{padding: 5, cursor: 'pointer'}}>
           Logout
         </span>}
-            </nav>
-            <hr/>
+                <hr/>
+            </Nav>
             <Routes>
                 <Route path="/" element={<Home />}/>
+                <Route path="/photo/:id" element={<Card />} />
                 <Route path="/posts" element={<Posts />}>
                     <Route index element={<PostLists />} />
                     <Route path=":slug" element={<Post />} />
@@ -57,3 +60,11 @@ export const AppLayout = () => {
         </>
     );
 }
+
+const Nav = styled.nav`
+    margin-bottom: 20px;
+    padding: 5px;
+    position: sticky;
+    top: 0;
+    background-color: azure`
+;
