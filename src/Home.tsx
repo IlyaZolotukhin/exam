@@ -103,61 +103,86 @@ export const Home = () => {
             {loading ? <div>Loading...</div>
                 : (
                     <table>
-                        <thead>
-                        <tr>
-                            <TD onClick={handleSortById}>Photo Number{sortByIdAsc ? ' ▲' : ' ▼'}</TD>
-                            <TD onClick={handleSortByTitle}>Photo Title{sortByTitleAsc ? ' ▲' : ' ▼'}</TD>
-                            <th>Photo</th>
-                        </tr>
-                        </thead>
+                        <THead>
+                            <tr>
+                                <TD onClick={handleSortById}>Photo Number{sortByIdAsc ? ' ▲' : ' ▼'}</TD>
+                                <TD onClick={handleSortByTitle}>Photo Title{sortByTitleAsc ? ' ▲' : ' ▼'}</TD>
+                                <th>Photo</th>
+                            </tr>
+                        </THead>
                         <tbody>
                         {photos.map(photo => (
-                            <tr key={photo.id}>
-                                <td>{photo.id}</td>
+                            <TR key={photo.id}>
+                                <TDid>{photo.id}</TDid>
                                 <td>
                                     <StyledLink to={`/photo/${photo.id}?title=${photo.title}&url=${photo.url}`}>
                                         {photo.title}
                                     </StyledLink>
                                 </td>
                                 <td><Img alt={photo.title} src={photo.url}/></td>
-                            </tr>
+                            </TR>
                         ))}
                         </tbody>
                     </table>
                 )}
 
             <Pagination>
-                <Button disabled={page === 1} onClick={handlePrevPage}>Previous Page</Button>
+                <Button disabled={page === 1} onClick={handlePrevPage}>Back</Button>
                 {page}
-                <Button onClick={handleNextPage}>Next Page</Button>
-                <select value={perPage} onChange={handleChangePerPage}>
-                    <option value="3">3 per page</option>
-                    <option value="5">5 per page</option>
-                    <option value="10">10 per page</option>
-                </select>
+                <Button onClick={handleNextPage}>Next</Button>
+                <Select value={perPage} onChange={handleChangePerPage}>
+                    <option value="3">3 items</option>
+                    <option value="5">5 items</option>
+                    <option value="10">10 items</option>
+                </Select>
 
             </Pagination>
         </Container>
     );
 }
 
-const Container = styled.div`
+export const Container = styled.div`
     width: 50%;
     margin: auto;
-    padding: 20px;`
+    padding: 20px;
+    @media screen and (width <= 1024px) {
+        padding: 0;
+        width: 80%;
+    }`
 ;
 const H1 = styled.h1`
     margin: 0;`
 ;
-const Input = styled.input`
+export const Input = styled.input`
     width: 50%;
     margin: 20px auto;
     padding: 5px;
     border: 2px solid gray;
-    border-radius: 5px;`
+    border-radius: 5px;
+    @media screen and (width <= 1024px) {
+        width: 100%;
+    }`
 ;
 const TD = styled.th`
     cursor: pointer;`
+;
+const THead = styled.thead`
+    @media screen and (width <= 600px) {
+        display: none;
+    }`
+;
+const TDid = styled.td`
+    @media screen and (width <= 600px) {
+        display: none;
+    }`
+;
+const TR = styled.tr`
+    @media screen and (width <= 600px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }`
 ;
 const StyledLink = styled(Link)`
     padding-right: 10px;
@@ -170,8 +195,28 @@ const Img = styled.img`
 const Pagination = styled.div`
     width: 50%;
     margin: auto;
-    padding: 40px;`
+    padding: 40px;
+    @media screen and (width <= 1024px) {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }`
 ;
-const Button = styled.button`
-    margin: 20px;`
+export const Button = styled.button`
+    margin: 20px;
+    padding: 5px;
+    border: 2px solid gray;
+    border-radius: 5px;
+    @media screen and (width <= 1024px) {
+        margin: 5px;
+    }`
+;
+const Select = styled.select`
+    margin: 20px;
+    padding: 5px;
+    border: 2px solid gray;
+    border-radius: 5px;
+    @media screen and (width <= 1024px) {
+        margin: 5px;
+    }`
 ;

@@ -27,13 +27,13 @@ export const AppLayout = () => {
                 <Link to="/" style={{padding: 5}}>
                     Home
                 </Link>
-                <Link to="/posts" style={{padding: 5}}>
-                    Posts
-                </Link>
                 <Link to="/about" style={{padding: 5}}>
                     About
                 </Link>
                 <span> | </span>
+                {user && <Link to="/posts" style={{padding: 5}}>
+                    Posts
+                </Link>}
                 {user && <Link to="/profile" style={{padding: 5}}>
                     Profile
                 </Link>}
@@ -49,7 +49,7 @@ export const AppLayout = () => {
                 <Route path="/" element={<Home />}/>
                 <Route path="/photo/:id" element={<Card />} />
                 <Route path="/posts" element={<Posts />}>
-                    <Route index element={<PostLists />} />
+                    <Route index element={<PostLists user={user} />} />
                     <Route path=":slug" element={<Post />} />
                 </Route>
                 <Route path="/about" element={<About />} />
