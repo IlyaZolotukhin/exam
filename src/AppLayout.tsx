@@ -32,7 +32,7 @@ export const AppLayout = () => {
     return (
         <>
             {isMenuOpen && <Background onClick={toggleMenu}/>}
-            <aside>
+
                 <Nav>
                     <BurgerIcon onClick={toggleMenu}>
                         &#9776;
@@ -97,10 +97,9 @@ export const AppLayout = () => {
                             {user && <SpanNav onClick={logOut}>
                                 Logout
                             </SpanNav>}</Menu>}
-
                     <hr/>
                 </Nav>
-            </aside>
+
             <Routes>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/photo/:id" element={<Card/>}/>
@@ -126,7 +125,6 @@ const Nav = styled.nav`
     background-color: azure;
     @media screen and (width <= 600px) {
         display: flex;
-        flex-direction: column;
         justify-content: space-between;
         align-items: flex-start;
     }`
@@ -137,6 +135,8 @@ const SpanNav = styled.span`
 const BurgerIcon = styled.div`
     display: none;
     @media screen and (width <= 600px) {
+        font-size: 25px;
+        font-weight: bold;
         display: flex;
         margin-left: 10px;
         cursor: pointer;
@@ -159,12 +159,13 @@ const DropdownMenu = styled.div`
 
     @media screen and (width <= 600px) {
         width: 50%;
+        height: 550px;
         display: flex;
         position: absolute;
         background-color: cornflowerblue;
         opacity: 0.9;
         flex-direction: column;
-        margin-top: 20px;
+        margin-top: 30px;
         padding: 10px 0 30px 10px;
         gap: 20px;
         border: 1px solid blue;
