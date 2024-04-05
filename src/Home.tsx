@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link, URLSearchParamsInit, useSearchParams} from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+import {StyledLink} from "./AppLayout";
 
 
 type Photo = {
@@ -100,6 +101,7 @@ export const Home = () => {
         <Container>
             <H1>Home</H1>
             <Input type="text" value={searchText} onChange={handleSearchTextChange} placeholder="Search by title"/>
+
             {loading ? <div>Loading...</div>
                 : (
                     <table>
@@ -125,7 +127,7 @@ export const Home = () => {
                         </tbody>
                     </table>
                 )}
-
+            {/*<div>{searchText && 'please enter correct text'}</div>*/}
             <Pagination>
                 <Button disabled={page === 1} onClick={handlePrevPage}>Back</Button>
                 {page}
@@ -184,11 +186,7 @@ const TR = styled.tr`
         text-align: center;
     }`
 ;
-const StyledLink = styled(Link)`
-    padding-right: 10px;
-    text-decoration: none;
-    color: inherit;`
-;
+
 const Img = styled.img`
     width: 100px`
 ;
@@ -197,6 +195,9 @@ const Pagination = styled.div`
     margin: auto;
     padding: 40px;
     @media screen and (width <= 1024px) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 100%;
         padding: 0;
         margin: 0;

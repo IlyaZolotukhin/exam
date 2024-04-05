@@ -43,16 +43,16 @@ export const Login = ({onLogin}: { onLogin: (user: User) => void }) => {
 
     return (
         <Container>
-            <br/>
+            <h1>Login</h1>
             <span>Username:</span>
-            <input
+            <LoginInput
                 type="text"
                 onChange={(e) => setData({...data, username: e.target.value})}/>
             <span>Password:</span>
-            <input
+            <LoginInput
                 type="password"
                 onChange={(e) => setData({...data, password: e.target.value})}/>
-            <button onClick={handleLogin}>Login</button>
+            <LoginButton onClick={handleLogin}>Login</LoginButton>
             <GoogleBtn>
                 <GoogleLogin
                     ux_mode={'popup'}
@@ -87,12 +87,25 @@ const Container = styled.div`
     gap: 10px;
     border: 1px solid black;
     border-radius: 5px;
-    @media screen and (width <= 1024px){
+    @media screen and (width <= 1024px) {
         width: 80%;
     }`
 ;
 const GoogleBtn = styled.div`
-    padding: 10px;
-    height: 46px;
-`
+            padding: 10px;
+            height: 46px;
+    `
+;
+const LoginInput = styled.input`
+    width: 90%;
+    padding: 5px;
+    border: 2px solid gray;
+    border-radius: 5px;`
+;
+const LoginButton = styled.button`
+    width: 50%;
+    margin: 10px;
+    padding: 5px;
+    border: 2px solid gray;
+    border-radius: 5px;`
 ;

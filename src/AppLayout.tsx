@@ -1,4 +1,4 @@
-import {Link, Route, Routes, useNavigate} from "react-router-dom";
+import {Link, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {Login, User} from "./Login";
 import {Home} from "./Home";
@@ -14,57 +14,173 @@ import styled from "styled-components";
 
 export const AppLayout = () => {
     const [user, setUser] = useState<User | null>(null);
+    const [isMenuOpen, setMenuOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation()
+    const currentPath = location.pathname
+
+    const toggleMenu = () => {
+        setMenuOpen(!isMenuOpen);
+    }
     const logOut = () => {
         setUser(null);
         googleLogout();
         navigate("/");
+        toggleMenu();
     }
 
     return (
         <>
-            <Nav>
-                <Link to="/" style={{padding: 5}}>
-                    Home
-                </Link>
-                <Link to="/about" style={{padding: 5}}>
-                    About
-                </Link>
-                <span> | </span>
-                {user && <Link to="/posts" style={{padding: 5}}>
-                    Posts
-                </Link>}
-                {user && <Link to="/profile" style={{padding: 5}}>
-                    Profile
-                </Link>}
-                {!user && <Link to="/login" style={{padding: 5}}>
-                    Login
-                </Link>}
-                {user && <span onClick={logOut} style={{padding: 5, cursor: 'pointer'}}>
-          Logout
-        </span>}
-                <hr/>
-            </Nav>
+            {isMenuOpen && <Background onClick={toggleMenu}/>}
+            <aside>
+                <Nav>
+                    <BurgerIcon onClick={toggleMenu}>
+                        &#9776;
+                    </BurgerIcon>
+                    {isMenuOpen ? <DropdownMenu>
+                            <StyledLink onClick={toggleMenu}
+                                        style={currentPath === "/" ? {color: 'blueviolet'} : {color: 'black'}} to="/">
+                                Home
+                            </StyledLink>
+                            <StyledLink onClick={toggleMenu}
+                                        style={currentPath === "/about" ? {color: 'blueviolet'} : {color: 'black'}}
+                                        to="/about">
+                                About
+                            </StyledLink>
+
+                            {user &&
+                                <StyledLink onClick={toggleMenu}
+                                            style={currentPath === "/posts" ? {color: 'blueviolet'} : {color: 'black'}}
+                                            to="/posts">
+                                    Posts
+                                </StyledLink>}
+                            {user && <StyledLink onClick={toggleMenu}
+                                                 style={currentPath === "/profile" ? {color: 'blueviolet'} : {color: 'black'}}
+                                                 to="/profile">
+                                Profile
+                            </StyledLink>}
+                            {!user &&
+                                <StyledLink onClick={toggleMenu}
+                                            style={currentPath === "/login" ? {color: 'blueviolet'} : {color: 'black'}}
+                                            to="/login">
+                                    Login
+                                </StyledLink>}
+                            {user && <SpanNav onClick={logOut}>
+                                Logout
+                            </SpanNav>}
+                        </DropdownMenu> :
+                        <Menu>
+                            <StyledLink style={currentPath === "/" ? {color: 'blueviolet'} : {color: 'black'}}
+                                              to="/">
+                            Home
+                        </StyledLink>
+                            <StyledLink style={currentPath === "/about" ? {color: 'blueviolet'} : {color: 'black'}}
+                                        to="/about">
+                                About
+                            </StyledLink>
+                            <span> | </span>
+                            {user &&
+                                <StyledLink style={currentPath === "/posts" ? {color: 'blueviolet'} : {color: 'black'}}
+                                            to="/posts">
+                                    Posts
+                                </StyledLink>}
+                            {user && <StyledLink
+                                style={currentPath === "/profile" ? {color: 'blueviolet'} : {color: 'black'}}
+                                to="/profile">
+                                Profile
+                            </StyledLink>}
+                            {!user &&
+                                <StyledLink style={currentPath === "/login" ? {color: 'blueviolet'} : {color: 'black'}}
+                                            to="/login">
+                                    Login
+                                </StyledLink>}
+                            {user && <SpanNav onClick={logOut}>
+                                Logout
+                            </SpanNav>}</Menu>}
+
+                    <hr/>
+                </Nav>
+            </aside>
             <Routes>
-                <Route path="/" element={<Home />}/>
-                <Route path="/photo/:id" element={<Card />} />
-                <Route path="/posts" element={<Posts />}>
-                    <Route index element={<PostLists user={user} />} />
-                    <Route path=":slug" element={<Post />} />
+                <Route path="/" element={<Home/>}/>
+                <Route path="/photo/:id" element={<Card/>}/>
+                <Route path="/posts" element={<Posts/>}>
+                    <Route index element={<PostLists user={user}/>}/>
+                    <Route path=":slug" element={<Post/>}/>
                 </Route>
-                <Route path="/about" element={<About />} />
-                <Route path="/login" element={<Login onLogin={setUser} />} />
-                <Route path="/profile" element={<Profile user={user} />} />
-                <Route path="*" element={<NoMatch />} />
+                <Route path="/about" element={<About/>}/>
+                <Route path="/login" element={<Login onLogin={setUser}/>}/>
+                <Route path="/profile" element={<Profile user={user}/>}/>
+                <Route path="*" element={<NoMatch/>}/>
             </Routes>
         </>
     );
 }
 
 const Nav = styled.nav`
+    font-weight: bold;
     margin-bottom: 20px;
     padding: 5px;
     position: sticky;
     top: 0;
-    background-color: azure`
+    background-color: azure;
+    @media screen and (width <= 600px) {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+    }`
+;
+const SpanNav = styled.span`
+    cursor: pointer`
+;
+const BurgerIcon = styled.div`
+    display: none;
+    @media screen and (width <= 600px) {
+        display: flex;
+        margin-left: 10px;
+        cursor: pointer;
+    }`
+;
+
+const Background = styled.div`
+
+    @media screen and (width <= 600px) {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        backdrop-filter: blur(2px);
+    }`
+;
+
+const DropdownMenu = styled.div`
+
+    @media screen and (width <= 600px) {
+        width: 50%;
+        display: flex;
+        position: absolute;
+        background-color: cornflowerblue;
+        opacity: 0.9;
+        flex-direction: column;
+        margin-top: 20px;
+        padding: 10px 0 30px 10px;
+        gap: 20px;
+        border: 1px solid blue;
+        border-radius: 5px;
+    }`
+;
+
+const Menu = styled.div`
+
+    @media screen and (width <= 600px) {
+        display: none;
+    }`
+;
+
+export const StyledLink = styled(Link)`
+    padding-right: 10px;
+    text-decoration: none;
+    color: inherit;`
 ;
