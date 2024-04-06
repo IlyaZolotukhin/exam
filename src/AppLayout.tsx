@@ -159,7 +159,7 @@ const DropdownMenu = styled.div`
 
     @media screen and (width <= 600px) {
         width: 50%;
-        height: 550px;
+        height: 350px;
         display: flex;
         position: absolute;
         background-color: cornflowerblue;
