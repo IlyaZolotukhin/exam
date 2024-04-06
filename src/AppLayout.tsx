@@ -11,7 +11,6 @@ import {Posts} from "./Posts";
 import {googleLogout} from "@react-oauth/google";
 import {Card} from "./Card";
 import styled from "styled-components";
-import {GoogleBtn} from "./GoogleBtn";
 
 export const AppLayout = () => {
     const [user, setUser] = useState<User | null>(null);
